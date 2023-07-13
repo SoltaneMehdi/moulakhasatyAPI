@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "drf_spectacular",
     # local
     "users.apps.UsersConfig",  # users app
     "notes.apps.NotesConfig",  # notes app
@@ -61,6 +62,13 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "molakhasaty API",
+    "DESCRIPTION": "an app for exchanging notes for university students",
+    "VERSION": "1.0.0",
 }
 
 MIDDLEWARE = [
@@ -94,7 +102,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request",
+                "django.template.context_processors.request",  # for the allaut
             ],
         },
     },
