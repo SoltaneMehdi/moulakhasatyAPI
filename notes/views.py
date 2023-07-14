@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, viewsets, status, views
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.exceptions import ValidationError
 from .models import Note, Comment
 from .serializers import UserSerializer, NoteSerializer, CommentSerializer
 from .permissions import IsAutorOrReadOnly
 from django.contrib.auth import get_user_model
+import zipfile
 
 
 # Create your views here.
@@ -24,6 +26,25 @@ class NoteViewset(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
 
     def perform_create(self, serializer):
+        file = self.request.FILES.get("note_files")
+        if file:
+            print("file sent")
+            if zipfile.is_zipfile(file):
+                print("is a zip file")
+            else:
+                print("not a zip file")
+                raise ValidationError("not a zip file")
+        serializer.save(author=self.request.user)
+
+    def perform_update(self, serializer):
+        file = self.request.FILES.get("note_files")
+        if file:
+            print("file sent")
+            if zipfile.is_zipfile(file):
+                print("is a zip file")
+            else:
+                print("not a zip file")
+                raise ValidationError("not a zip file")
         serializer.save(author=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
