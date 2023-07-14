@@ -20,6 +20,8 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,4 +31,4 @@ urlpatterns = [
     path("api/v1/auth/registration", include("dj_rest_auth.registration.urls")),
     path("api/schema", SpectacularAPIView.as_view(), name="schema"),
     path("api/documentation", SpectacularSwaggerView.as_view(), name="swagger-ui"),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

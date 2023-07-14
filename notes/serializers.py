@@ -17,25 +17,13 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
 
 
-# doesn't include comments
-class NoteListSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source="author.username")
-
-    class Meta:
-        fields = (
-            "id",
-            "author",
-            "title",
-            "description",
-            "created_at",
-        )
-        model = Note
-
-
 # for a detailed view, includes comments
-class NoteDetailSerializer(serializers.ModelSerializer):
+class NoteSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source="author.username")
     comments = CommentSerializer(many=True, read_only=True)
+    likes = serializers.SerializerMethodField()
+    liked = serializers.SerializerMethodField()
+    note_files = serializers.FileField(required=False)
 
     class Meta:
         fields = (
@@ -45,8 +33,20 @@ class NoteDetailSerializer(serializers.ModelSerializer):
             "description",
             "created_at",
             "comments",
+            "likes",
+            "liked",
+            "note_files",
         )
         model = Note
+
+    def get_likes(self, obj):
+        return obj.total_likes()
+
+    def get_liked(self, obj):
+        request = self.context.get("request", None)
+        if request and request.user.is_authenticated:
+            return obj.likes.filter(id=request.user.id).exists()
+        return False
 
 
 class UserSerializer(serializers.ModelSerializer):
