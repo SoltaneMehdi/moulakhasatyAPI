@@ -15,7 +15,7 @@ router.register("notes", NoteViewset, basename="notes")
 router.register("comments", CommentViewset, basename="comments")
 
 urlpatterns = [
-    path("<int:pk>/like", LikeNoteView.as_view(), name="like_note"),
-    path("<int:pk>/unlike", UnlikeNoteView.as_view(), name="unlike_note"),
+    path("notes/<int:pk>/like", LikeNoteView.as_view(), name="like_note"),
+    path("notes/<int:pk>/unlike", UnlikeNoteView.as_view(), name="unlike_note"),
     path("", include(router.urls)),
 ]
